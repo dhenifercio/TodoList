@@ -1,27 +1,60 @@
-import { Header } from "./components/Header"
-import {Trash2} from "lucide-react"
-import {Footer} from "./components/Footer"
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { useEffect, useState } from "react";
+import { TodoItem } from "./components/TodoItem";
+import api from "./services/api";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+  useEffect(() => {
+    getTodos()
+  }, []);
 
+  const getTodos = async () => {
+    try{
+      const response = await api.get("tarefas")
+      setTodos(response.data)
+    }catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleDeleteTodo = async (id) => {
+    try {
+      await api.delete(`tarefas/${id}`);
+      const newTodos = todos.filter((todo) => todo.id !== id);
+      setTodos(newTodos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleAddTodo = async (name) => {
+    try {
+      await api.post("tarefas", { name, concluida: false });
+      await getTodos()
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex flex-col min-h-screen w-screen bg-gray-100">
       <div className="flex-grow w-[485px] mx-auto px-4">
         <Header />
-        <ul>
-          <li className="flex justify-between gap-4">
-            <div className="bg-gray-50 p-5 flex-1">
-              <span>Fazer o Blog</span>
-            </div>
-            <button className="bg-red-500 p-5">
-              <Trash2 className="text-red-950" size={32} />
-            </button>
-          </li>
+        <ul className="max-h-[465px] overflow-y-auto px-4">
+          {todos.map((todo) => {
+            return (
+              <TodoItem
+                onDeleteTodo={handleDeleteTodo}
+                todo={todo}
+                key={todo.id}
+              />
+            );
+          })}
         </ul>
       </div>
-         <Footer />
-       </div>
+      <Footer onNewTodo={handleAddTodo} />
+    </div>
   );
-};
+}
 
 export default App;
