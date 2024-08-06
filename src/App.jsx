@@ -6,6 +6,7 @@ import api from "./services/api";
 
 function App() {
   const [todos, setTodos] = useState([]);
+
   useEffect(() => {
     getTodos()
   }, []);
@@ -19,6 +20,30 @@ function App() {
     }
   }
 
+  const handleClick = async (id) => {
+    try {
+      const todo = todos.find((todo) => todo.id === id);
+      const newState = !todo.concluida;
+      await api.put(`tarefas/${id}`, { ...todo, concluida :newState});
+      setTodos((prevTodos) =>
+        prevTodos.map((t) =>
+          t.id === id ? { ...t, concluida: newState } : t
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddTodo = async (name) => {
+    try {
+      await api.post("tarefas", { name, concluida: false });
+      await getTodos()
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleDeleteTodo = async (id) => {
     try {
       await api.delete(`tarefas/${id}`);
@@ -28,14 +53,7 @@ function App() {
       console.log(error);
     }
   };
-  const handleAddTodo = async (name) => {
-    try {
-      await api.post("tarefas", { name, concluida: false });
-      await getTodos()
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
   return (
     <div className="flex flex-col min-h-screen w-screen bg-gray-100">
       <div className="flex-grow w-[485px] mx-auto px-4">
@@ -45,6 +63,7 @@ function App() {
             return (
               <TodoItem
                 onDeleteTodo={handleDeleteTodo}
+                onClickTodo={handleClick}
                 todo={todo}
                 key={todo.id}
               />

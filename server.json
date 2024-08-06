@@ -1,17 +1,9 @@
 {
   "tarefas": [
     {
-      "id": "ba79",
-      "name": "aaa",
-      "concluida": false
-    },
-    {
-      "id": "eaed",
-      "name": "eee",
+      "id": "649b",
+      "name": "olaa",
       "concluida": false
     }
   ]
 }
-
-//trasnformar a div branca em um botão, para tarefa concluida, bontão mais escuro e letra cortada
-//true > false    false>true

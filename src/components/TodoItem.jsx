@@ -1,24 +1,16 @@
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
-export function TodoItem({ todo, onDeleteTodo }) {
-  const [isCompleted, setIsCompleted] = useState(false);
-  const handleClick = () => {
-    setIsCompleted((prevState) => {
-      const newState = !prevState;
-      console.log("Button clicked. New state:", newState);
-      return newState;
-    });
-  };
+export function TodoItem({ todo, onDeleteTodo, onClickTodo }) {
 
   return (
     <li key={todo.id} className="flex justify-between gap-4 py-2">
       <button
-        onClick={handleClick}
-        className={`bg-gray-50 p-5 flex-1 ${isCompleted ? "bg-green-50" : ""}`}
+        onClick={ () => onClickTodo(todo.id)}
+        className={`bg-gray-50 p-5 flex-1 ${todo.concluida ? "bg-green-50" : ""}`}
       >
         <span
-          className={`text-lg font-medium ${isCompleted ? "line-through" : ""}`}
+          className={`text-lg font-medium ${todo.concluida ? "line-through" : ""}`}
         >
           {todo.name}
         </span>
